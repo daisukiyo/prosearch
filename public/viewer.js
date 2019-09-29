@@ -26,19 +26,17 @@ function setAuth (token) {
 }
 
 twitch.onContext(function (context) {
-  twitch.rig.log(context);
+
 });
 
 twitch.onAuthorized(function (auth) {
+
   // save our credentials
   token = auth.token;
   tuid = auth.userId;
+  const channelID = auth.channelId
 
-  // enable the button
-  $('#cycle').removeAttr('disabled');
 
-  setAuth(token);
-  $.ajax(requests.get);
 });
 
 function updateBlock (hex) {
@@ -48,6 +46,8 @@ function updateBlock (hex) {
 
 function logError(_, error, status) {
   twitch.rig.log('EBS request returned '+status+' ('+error+')');
+  console.log('EBS request returned '+status+' ('+error+')');
+  
 }
 
 function logSuccess(hex, status) {

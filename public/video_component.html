@@ -1,25 +1,121 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Viewer Page</title>
-</head>
-<body style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
-    <div id="app" class="full-height"></div>
+    <link rel="stylesheet" href="styles.css">
     <script src="https://extension-files.twitch.tv/helper/v1/twitch-ext.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"
-            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-            crossorigin="anonymous"></script>
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script src="viewer.js" type="text/javascript"></script>
-    <h2>Hello, World!</h2>
-    <p>Would you care to cycle a color?</p>
-    <div>
-        <input type="button" id="cycle" disabled="disabled" value="Yes, I would" />
-    </div>
-    <div style="float: left; position: relative; left: 50%">
-        <div id="color" style="border-radius: 50px; transition: background-color 0.5s ease; margin-top: 30px; width: 100px; height: 100px; background-color: #6441A4; float: left; position: relative; left: -50%">
+    <!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
+
+    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/7.0.0/firebase-app.js"></script>
+
+    <!-- If you enabled Analytics in your project, add the Firebase SDK for Analytics -->
+    <script src="https://www.gstatic.com/firebasejs/7.0.0/firebase-analytics.js"></script>
+
+    <!-- Add Firebase products that you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/7.0.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.0.0/firebase-firestore.js"></script>
+
+</head>
+
+<body style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
+    <div id="app" class="full-height">
+        <div id="streamer">
+            <p>
+                <span id="streamerName">Tyler1's </span>
+                <span>preferred pronouns are </span>
+                <span id="streamerPronoun" class="pronoun">he/him</span>
+            </p>
         </div>
+        
+        <div id="viewer">
+            <p>My preferred pronouns are:</p>
+            <!-- Submit viewer's pronouns, display pronoun after submitted -->
+            <form id="personal-form">
+                <select id="pronounDrop" name="selectPronoun">
+                    <option value="0">Select Pronoun</option>
+                    <option value="he">He/Him/His</option>
+                    <option value="she">She/Her/Hers</option>
+                    <option value="them">They/Them/Theirs</option>
+                </select>
+                <input type="submit" value="submit" />
+            </form>
+        </div>
+
+        <div id="lookup">
+            <!-- Connect + Return info from Firebase -->
+            <form id="pronoun-search-bar">
+                <p>Search viewers pronouns:</p>
+                <input id="userSearch" type="text" name="username" value="" />
+            </form>
+
+            <!-- Reveal after search, otherwise display error message -->
+            <p>
+                <span hidden id="lookupName">S33V's</span>
+                <span hidden id="sentence-text"> preferred pronouns are </span>
+                <span hidden id="lookupPronoun" class="pronoun">they/them</span>
+            </p>
+        </div>
+            
+            
     </div>
-    <div id="list">
-    </div>
+    
+
+    <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyDA1g6qSrvjLxclJQWZ65ohQiEB5X1sHws",
+            authDomain: "prosearch-707d3.firebaseapp.com",
+            databaseURL: "https://prosearch-707d3.firebaseio.com",
+            projectId: "prosearch-707d3",
+            storageBucket: "prosearch-707d3.appspot.com",
+            messagingSenderId: "650692458312",
+            appId: "1:650692458312:web:786e6ecccbf8478cbb657d",
+            measurementId: "G-2N8WMMM35Z"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        firebase.analytics();
+
+        const testFunction = function (test) {
+            console.log("hello", test);
+
+        }
+
+        const userInput = document.querySelector("#pronoun-search-bar");
+        const personalForm = document.querySelector("#personal-form")
+
+        personalForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            console.log("hello");
+            
+        })
+
+        userInput.addEventListener("submit", (e) => {
+            e.preventDefault();
+            console.log("lookup call");
+
+            var refString = 'users/' + $('#pronoun-search-bar').val;
+            // let snapshot = firebase.ref(refString).once('value');
+
+            const userName = document.querySelector("#lookupName");
+            const outputPronoun = document.querySelector("#lookupPronoun")
+
+            const pronouns = ["He/Him/His", "She/Her/Hers","They/Them/Theirs"]
+
+            userName.innerHTML = e.target.childNodes[3].value + "'s";
+            outputPronoun.innerHTML = pronouns[Math.floor(Math.random()*pronouns.length)]
+
+            document.querySelector("#sentence-text").removeAttribute("hidden")
+            userName.removeAttribute("hidden")
+            outputPronoun.removeAttribute("hidden")
+            return false
+        })
+    </script>
 </body>
+
 </html>
